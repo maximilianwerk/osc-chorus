@@ -51,7 +51,7 @@ do
   shift
 done
 
-# Function check_prerequisites makes sure that you have curl, jq, docker-compose, and zip installed. See helpers.sh for details.
+# Function check_prerequisites makes sure that you have curl, jq, docker compose, and zip installed. See helpers.sh for details.
 check_prerequisites
 
 services="blacklight solr1 solr2 solr3 keycloak smui"
@@ -93,15 +93,15 @@ if ! $local_deploy; then
   sed -i.bu 's/localhost:8983/chorus.dev.o19s.com:8983/g'  ./solr/wait-for-solr-cluster.sh
   sed -i.bu 's/localhost:8983/chorus.dev.o19s.com:8983/g'  ./solr/wait-for-zk-200.sh
   sed -i.bu 's/keycloak:9080/chorus.dev.o19s.com:9080/g'  ./solr/security.json
-  sed -i.bu 's/keycloak:9080/chorus.dev.o19s.com:9080/g'  ./docker-compose.yml
+  sed -i.bu 's/keycloak:9080/chorus.dev.o19s.com:9080/g'  ./docker compose.yml
 fi
 
-docker-compose down -t 30 -v
+docker compose down -t 30 -v
 if $shutdown; then
   exit
 fi
 
-docker-compose up -d --build ${services}
+docker compose up -d --build ${services}
 
 echo -e "${MAJOR}Waiting for Solr cluster to start up and all three nodes to be online.${RESET}"
 ./solr/wait-for-solr-cluster.sh # Wait for all three Solr nodes to be online
@@ -336,23 +336,23 @@ if $offline_lab; then
   log_major "Setting up Quepid"
   ./mysql/wait-for-mysql.sh
 
-  docker-compose run --rm quepid bin/rake db:setup
-  docker-compose run quepid thor user:create -a admin@choruselectronics.com "Chorus Admin" password
+  docker compose run --rm quepid bin/rake db:setup
+  docker compose run quepid thor user:create -a admin@choruselectronics.com "Chorus Admin" password
   log_minor "Setting up Chorus Baseline Relevance case"
   if $local_deploy; then
     solr_collection_url=http://localhost:8983/solr/ecommerce/select
   else
     solr_collection_url=http://chorus.dev.o19s.com:8983/solr/ecommerce/select
   fi
-  docker-compose run quepid thor case:create "Chorus Baseline Relevance" solr ${solr_collection_url} JSONP "id:id, title:title, thumb:img_500x500, name, brand, product_type" "q=#\$query##&useParams=visible_products,querqy_algo" nDCG@10 admin@choruselectronics.com
+  docker compose run quepid thor case:create "Chorus Baseline Relevance" solr ${solr_collection_url} JSONP "id:id, title:title, thumb:img_500x500, name, brand, product_type" "q=#\$query##&useParams=visible_products,querqy_algo" nDCG@10 admin@choruselectronics.com
 
   docker cp ./katas/Broad_Query_Set_rated.csv quepid:/srv/app/Broad_Query_Set_rated.csv
   docker exec quepid thor ratings:import 1 /srv/app/Broad_Query_Set_rated.csv >> /dev/null
 
 
   log_major "Setting up RRE"
-  docker-compose run rre mvn rre:evaluate
-  docker-compose run rre mvn rre-report:report
+  docker compose run rre mvn rre:evaluate
+  docker compose run rre mvn rre-report:report
 fi
 
 if $observability; then
@@ -364,7 +364,7 @@ fi
 
 if $vector_search; then
   log_major "Setting up Embeddings service"
-  docker-compose up -d --build embeddings
+  docker compose up -d --build embeddings
   ./embeddings/wait-for-api.sh
 fi
 

@@ -1,13 +1,14 @@
 FROM python:3.10
 
 COPY ./requirements.txt /code/requirements.txt
-COPY ./app /code/app
-
-#
 RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
 
+COPY ./app /code/app
+#
+
+COPY ./models /mnt/models
+
 # Download models from the internet and store in Docker image
-RUN python code/app/minilm/loadModel.py
 
 # Commenting out as there is no provision to save model in https://github.com/openai/CLIP
 #RUN python code/app/clip/loadModel.py
