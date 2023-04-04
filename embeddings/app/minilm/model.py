@@ -1,9 +1,7 @@
-from sentence_transformers import SentenceTransformer
+import finetuner
 
-model = SentenceTransformer('all-MiniLM-L12-v2.model')
+model = finetuner.get_model('/mnt/models/margin-mse-osc-run.zip', device='cpu')
 
 
 def get_text_sentence_embedding(text: str, normalize: bool = True):
-    return model.encode(text, normalize_embeddings=normalize, convert_to_numpy=True)
-
-
+    return finetuner.encode(model=model, data=text)[0]
