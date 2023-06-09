@@ -19,6 +19,8 @@ for demo purposes
   <field name="date_released" type="date" indexed="true" stored="true" />
   <field name="product_vector" type="knn_vector_text" indexed="true" stored="true"/>
   <field name="product_image_vector" type="knn_vector_image" indexed="true" stored="true"/>
+  <field name="finetuned_product_vector" type="knn_vector_text_f" indexed="true" stored="true"/>
+  <field name="finetuned_product_image_vector" type="knn_vector_image_f" indexed="true" stored="true"/>
 
   <!-- we don't stem names -->
   <field name="supplier" type="text_general" indexed="true" stored="true"/>
@@ -94,8 +96,10 @@ for demo purposes
 
   <fieldType name="random" class="solr.RandomSortField" indexed="true"/>
 
-  <fieldType name="knn_vector_text" class="solr.DenseVectorField" vectorDimension="768" similarityFunction="cosine" knnAlgorithm="hnsw"/>
+  <fieldType name="knn_vector_text" class="solr.DenseVectorField" vectorDimension="384" similarityFunction="cosine" knnAlgorithm="hnsw"/>
   <fieldType name="knn_vector_image" class="solr.DenseVectorField" vectorDimension="768" similarityFunction="cosine" knnAlgorithm="hnsw"/>
+  <fieldType name="knn_vector_text_f" class="solr.DenseVectorField" vectorDimension="768" similarityFunction="cosine" knnAlgorithm="hnsw"/>
+  <fieldType name="knn_vector_image_f" class="solr.DenseVectorField" vectorDimension="768" similarityFunction="cosine" knnAlgorithm="hnsw"/>
 
   <fieldType name="text_stemmed_en" class="solr.TextField" autoGeneratePhraseQueries="false"
              enableGraphQueries="false" positionIncrementGap="100" multiValued="false">
